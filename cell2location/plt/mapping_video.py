@@ -8,10 +8,34 @@ from matplotlib.colors import ListedColormap
 
 
 def get_rgb_function(cmap, min_value, max_value):
-    r""" Generate a function to map continous values to RGB values using colormap between min_value & max_value.
+    r"""Generate a function to map continous values to RGB values using colormap between min_value & max_value.
+
+    Parameters
+    ----------
+    cmap :
+        
+    min_value :
+        
+    max_value :
+        
+
+    Returns
+    -------
+
     """
 
     def func(x):
+        r"""
+
+        Parameters
+        ----------
+        x :
+            
+
+        Returns
+        -------
+
+        """
         return cmap((np.clip(x, min_value, max_value) - min_value) / (max_value - min_value))
 
     return func
@@ -31,33 +55,86 @@ def plot_contours(spot_factors_df, coords, text=None,
                   plt_axis='off', axis_y_flipped=True, x_y_labels=['', ''],
                   crop_x=None, crop_y=None, text_box_alpha=0.9,
                   reorder_cmap=range(7), overwrite_color=None):
-    r""" Plot spatial abundance of cell types (regulatory programmes) with colour gradient and interpolation. 
+    r"""Plot spatial abundance of cell types (regulatory programmes) with colour gradient and interpolation.
       This method supports only 7 cell types with these colours (in order, which can be changed using reorder_cmap).
       'yellow' 'orange' 'blue' 'green' 'purple' 'grey' 'white'
-    :param spot_factors_df: pd.DataFrame - spot locations of cell types, only 6 cell types allowed
-    :param coords: np.ndarray - x and y coordinates (in columns) to be used for ploting spots
-    :param text: pd.DataFrame - with x, y coordinates, text to be printed
-    :param circle_diameter: diameter of circles
-    :param alpha_scaling: adjust color alpha
-    :param col_breaks: contour plot levels
-    :param max_col: crops the colorscale maximum value for each column in spot_factors_df.
-    :param max_color_quantile: crops the colorscale at x quantile of the data.
-    :param show_img: show image?
-    :param img: numpy array representing a tissue image. 
-        If not provided a black background image is used.
-    :param img_alpha: transparency of the image
-    :param plot_contour: boolean, whether to plot contours (not implemented yet).
-    :param save_path: if not None - directory where to save images, otherwise the plot is shown.
-    :param save_name: file name when saving the plot
-    :param save_extension: file extension when saving the plot
-    :param show_fig: boolean, show figure?
-    :param lim: x and y max limits on the plot. Minimum is always set to 0, if `lim` is None maximum 
-        is set to image height and width. If 'no_limit' then no limit is set.
-    :param fontsize: text fontsize
-    :param adjust_text: move text label to prevent overlap
-    :param plt_axis: show axes?
-    :param axis_y_flipped: flip y axis to match coordinates of the plotted image
-    :param reorder_cmap: reorder colors to make sure you get the right color for each category
+
+    Parameters
+    ----------
+    spot_factors_df :
+        pd.DataFrame - spot locations of cell types, only 6 cell types allowed
+    coords :
+        np.ndarray - x and y coordinates (in columns) to be used for ploting spots
+    text :
+        pd.DataFrame - with x, y coordinates, text to be printed (Default value = None)
+    circle_diameter :
+        diameter of circles (Default value = 4)
+    alpha_scaling :
+        adjust color alpha (Default value = 0.6)
+    col_breaks :
+        contour plot levels (Default value = [0.1)
+    max_col :
+        crops the colorscale maximum value for each column in spot_factors_df. (Default value = [5000)
+    max_color_quantile :
+        crops the colorscale at x quantile of the data. (Default value = 0.95)
+    show_img :
+        show image? (Default value = True)
+    img :
+        numpy array representing a tissue image.
+        If not provided a black background image is used. (Default value = None)
+    img_alpha :
+        transparency of the image (Default value = 1)
+    plot_contour :
+        boolean, whether to plot contours (not implemented yet). (Default value = False)
+    save_path :
+        if not None - directory where to save images, otherwise the plot is shown. (Default value = None)
+    save_name :
+        file name when saving the plot (Default value = '')
+    save_extension :
+        file extension when saving the plot (Default value = 'png')
+    show_fig :
+        boolean, show figure? (Default value = True)
+    lim :
+        x and y max limits on the plot. Minimum is always set to 0, if `lim` is None maximum
+        is set to image height and width. If 'no_limit' then no limit is set. (Default value = None)
+    fontsize :
+        text fontsize (Default value = 12)
+    adjust_text :
+        move text label to prevent overlap (Default value = False)
+    plt_axis :
+        show axes? (Default value = 'off')
+    axis_y_flipped :
+        flip y axis to match coordinates of the plotted image (Default value = True)
+    reorder_cmap :
+        reorder colors to make sure you get the right color for each category (Default value = range(7))
+    100 :
+        
+    1000 :
+        
+    3000] :
+        
+    5000 :
+        
+    5000] :
+        
+    save_facecolor :
+         (Default value = 'black')
+    x_y_labels :
+         (Default value = ['')
+    ''] :
+        
+    crop_x :
+         (Default value = None)
+    crop_y :
+         (Default value = None)
+    text_box_alpha :
+         (Default value = 0.9)
+    overwrite_color :
+         (Default value = None)
+
+    Returns
+    -------
+
     """
 
     if spot_factors_df.shape[1] > 7:
@@ -264,11 +341,29 @@ def plot_contours(spot_factors_df, coords, text=None,
 
 def interpolate_coord(start=10, end=5, steps=100, accel_power=3,
                       accelerate=True, jitter=None):
-    r"""Interpolate coordinates between start_array and end_array positions in N steps
+    """Interpolate coordinates between start_array and end_array positions in N steps
         with non-linearity in movement according to acc_power,
         and accelerate change in coordinates (True) or slow it down (False).
-    :param jitter: shift positions by a random number by sampling:
-                  new_coord = np.random.normal(mean=coord, sd=jitter), reasonable values 0.01-0.1
+
+    Parameters
+    ----------
+    jitter :
+        shift positions by a random number by sampling:
+        new_coord = np.random.normal(mean=coord, sd=jitter), reasonable values 0.01-0.1 (Default value = None)
+    start :
+         (Default value = 10)
+    end :
+         (Default value = 5)
+    steps :
+         (Default value = 100)
+    accel_power :
+         (Default value = 3)
+    accelerate :
+         (Default value = True)
+
+    Returns
+    -------
+
     """
 
     seq = np.linspace(np.zeros_like(start), np.ones_like(end), steps)
@@ -305,29 +400,97 @@ def plot_video_mapping(adata_vis, adata, sample_ids, spot_factors_df,
                        sc_jitter=None, sp_jitter=None,
                        save_path='./results/mouse_viseum_snrna/std_model/mapping_video/',
                        crop_x=None, crop_y=None):
-    r"""Create frames for a video illustrating the approach from UMAP of single cells to their spatial locations.
+    """Create frames for a video illustrating the approach from UMAP of single cells to their spatial locations.
         We use linear interpolation of UMAP and spot coordinates to create movement.
-    :param adata_vis: anndata with Visium data (including spatial slot in `.obsm`)
-    :param adata: anndata with single cell data (including X_umap slot in `.obsm`)
-    :param sample_ids: pd.Series - sample ID for each spot
-    :param spot_factors_df: output of the model showing spatial expression of cell types / factors.
-    :param sel_clust: selected cluster names in `adata_cluster_col` column of adata.obs
-    :param sel_clust_col: selected cluster column name in spot_factors_df
-    :param sample_id: sample id to use for visualisation
-    :param adata_cluster_col: column in adata.obs containing cluster annotations
-    :param cell_fact_df: alternative to adata_cluster_col, pd.DataFrame specifying class for each cell (can be continuous).
-    :param step_n: how many frames to record in each step: UMAP, UMAP collapsing into averages, averages, averages expanding into locations, locations.
-    :param step_quantile: how to choose maximum colorscale limit in each step? (quantile) Use 1 for discrete values.
-    :param sc_point_size: point size for cells
-    :param aver_point_size: point size for averages
-    :param sp_point_size: point size for spots
-    :param fontsize: size of text label of averages
-    :param adjust_text: adjust text label position to avoid overlaps
-    :param sc_alpha, sp_alpha: color alpha scaling for single cells and spatial.
-    :param sc_power, sp_power: change dot size nonlinearly with this exponent 
-    :param sc_accel_power, sp_accel_power: change movement speed size nonlinearly with this exponent 
-    :param sc_accel_decel, sp_accel_decel: accelerate (True) or decelereate (False)
-    :param save_path: path where to save frames (named according to order of steps)
+
+    Parameters
+    ----------
+    adata_vis :
+        anndata with Visium data (including spatial slot in `.obsm`)
+    adata :
+        anndata with single cell data (including X_umap slot in `.obsm`)
+    sample_ids :
+        pd.Series - sample ID for each spot
+    spot_factors_df :
+        output of the model showing spatial expression of cell types / factors.
+    sel_clust :
+        selected cluster names in `adata_cluster_col` column of adata.obs
+    sel_clust_col :
+        selected cluster column name in spot_factors_df
+    sample_id :
+        sample id to use for visualisation (Default value = 's144600')
+    adata_cluster_col :
+        column in adata.obs containing cluster annotations (Default value = 'annotation_1')
+    cell_fact_df :
+        alternative to adata_cluster_col, pd.DataFrame specifying class for each cell (can be continuous). (Default value = None)
+    step_n :
+        how many frames to record in each step: UMAP, UMAP collapsing into averages, averages, averages expanding into locations, locations. (Default value = [20)
+    step_quantile :
+        how to choose maximum colorscale limit in each step? (quantile) Use 1 for discrete values. (Default value = [1)
+    sc_point_size :
+        point size for cells (Default value = 1)
+    aver_point_size :
+        point size for averages (Default value = 20)
+    sp_point_size :
+        point size for spots (Default value = 5)
+    fontsize :
+        size of text label of averages (Default value = 15)
+    adjust_text :
+        adjust text label position to avoid overlaps (Default value = False)
+    sc_alpha :
+        sp_alpha: color alpha scaling for single cells and spatial. (Default value = 0.6)
+    sc_power :
+        sp_power: change dot size nonlinearly with this exponent (Default value = 20)
+    sc_accel_power :
+        sp_accel_power: change movement speed size nonlinearly with this exponent (Default value = 3)
+    sc_accel_decel :
+        sp_accel_decel: accelerate (True) or decelereate (False) (Default value = True)
+    save_path :
+        path where to save frames (named according to order of steps) (Default value = './results/mouse_viseum_snrna/std_model/mapping_video/')
+    sc_img :
+         (Default value = None)
+    sp_img :
+         (Default value = None)
+    sp_img_scaling_fac :
+         (Default value = 1)
+    100 :
+        
+    15 :
+        
+    45 :
+        
+    80 :
+        
+    30] :
+        
+    1 :
+        
+    0.95 :
+        
+    0.95] :
+        
+    sp_alpha :
+         (Default value = 0.8)
+    img_alpha :
+         (Default value = 0.8)
+    sp_power :
+         (Default value = 20)
+    sp_accel_power :
+         (Default value = 3)
+    sp_accel_decel :
+         (Default value = False)
+    sc_jitter :
+         (Default value = None)
+    sp_jitter :
+         (Default value = None)
+    crop_x :
+         (Default value = None)
+    crop_y :
+         (Default value = None)
+
+    Returns
+    -------
+
     """
 
     from tqdm.auto import tqdm

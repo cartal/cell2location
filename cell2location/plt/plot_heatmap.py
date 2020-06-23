@@ -8,18 +8,34 @@ from scipy.spatial import distance
 
 def heatmap(M, ticks=False, log=False, figsize=None, equal=False,
             row_labels=None, col_labels=None, cbar=True, cmap='RdPu', title=''):
-    r""" Plot heatmap with row and column labels using plt.imshow
+    """Plot heatmap with row and column labels using plt.imshow
 
-    :param M: np.ndarray to be visualised, or an object that can be coerced to np.ndarray
-    :param ticks: boolean, show x and y axis ticks?
-    :param log: boolean, color on logscale?
-    :param figsize: figure size as a tuple (x, y)
-    :param equal: boolean, each tile should be square (equal aspect)
-    :param row_labels: names of rows (pd.Series, pd.Index or list)
-    :param col_labels: names of columns (pd.Series, pd.Index or list)
-    :param cbar: boolean, show colorbar?
-    :param cmap: valid matplotlib colormap name
-    :param title: title of the plot
+    Parameters
+    ----------
+    M :
+        np.ndarray to be visualised, or an object that can be coerced to np.ndarray
+    ticks :
+        boolean, show x and y axis ticks? (Default value = False)
+    log :
+        boolean, color on logscale? (Default value = False)
+    figsize :
+        figure size as a tuple (x, y) (Default value = None)
+    equal :
+        boolean, each tile should be square (equal aspect) (Default value = False)
+    row_labels :
+        names of rows (pd.Series, pd.Index or list) (Default value = None)
+    col_labels :
+        names of columns (pd.Series, pd.Index or list) (Default value = None)
+    cbar :
+        boolean, show colorbar? (Default value = True)
+    cmap :
+        valid matplotlib colormap name (Default value = 'RdPu')
+    title :
+        title of the plot (Default value = '')
+
+    Returns
+    -------
+
     """
     if figsize is not None:
         plt.figure(figsize=figsize)
@@ -59,17 +75,34 @@ def heatmap(M, ticks=False, log=False, figsize=None, equal=False,
 def clustermap(df, cluster_rows=True, cluster_cols=True,
                figure_size=(5, 5), cmap="RdPu", log=False,
                return_linkage=False, equal=True, title=''):
-    r"""Plot heatmap with hierarchically clustered rows and columns using `.heatmap`
+    """Plot heatmap with hierarchically clustered rows and columns using `.heatmap`
 
-    :param df: pandas.DataFrame to be visualised as a heatmap
-    :param cluster_rows: cluster rows or keep the same order as df?
-    :param cluster_cols: cluster columns or keep the same order as df?
-    :param figure_size: tuple specifying figure dimensions, passed to .heatmap
-    :param cmap: pyplot colormap, passed to .heatmap
-    :param log: boolean, color on logscale?
-    :param return_linkage: return the plot or the plot + linkage for rows and columns? If true returns a dictionary with 'plot', 'row_linkage' and 'col_linkage' elements.
-    :param equal: boolean, each tile should be square (equal aspect)
-    :param title: clustermap title
+    Parameters
+    ----------
+    df :
+        pandas.DataFrame to be visualised as a heatmap
+    cluster_rows :
+        cluster rows or keep the same order as df? (Default value = True)
+    cluster_cols :
+        cluster columns or keep the same order as df? (Default value = True)
+    figure_size :
+        tuple specifying figure dimensions, passed to .heatmap (Default value = (5)
+    cmap :
+        pyplot colormap, passed to .heatmap (Default value = "RdPu")
+    log :
+        boolean, color on logscale? (Default value = False)
+    return_linkage :
+        return the plot or the plot + linkage for rows and columns? If true returns a dictionary with 'plot', 'row_linkage' and 'col_linkage' elements. (Default value = False)
+    equal :
+        boolean, each tile should be square (equal aspect) (Default value = True)
+    title :
+        clustermap title (Default value = '')
+    5) :
+        
+
+    Returns
+    -------
+
     """
 
     if cluster_rows:

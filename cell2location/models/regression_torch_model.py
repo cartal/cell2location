@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""RegressionTorchModel Base class for model with no cell specific parameters"""
+r"""RegressionTorchModel Base class for model with no cell specific parameters"""
 
 import matplotlib.pyplot as plt
 # +
@@ -12,23 +12,21 @@ from cell2location.models.torch_model import TorchModel
 class RegressionTorchModel(TorchModel):
     r"""Base class for regression models with no cell-specific parameters (enable minibatch training).
 
-    :param sample_id: str with column name in cell2covar that denotes sample
-    :param cell2covar: pd.DataFrame with covariates in columns and cells in rows, rows should be named.
-    :param X_data: Numpy array of gene expression (cols) in cells (rows)
-    :param n_iter: number of iterations, when using minibatch, the number of epochs (passes through all data),
-      supersedes self.n_iter
-    :param (data_type, learning_rate, total_grad_norm_constraint, verbose, var_names, var_names_read, obs_names, fact_names):
-      arguments for parent class :func:`~cell2location.models.BaseModel`
-    :param minibatch_size: if None all data is used for training,
-      if not None - the number of cells / observations per batch. For best results use 1024 cells per batch.
-    :param minibatch_seed: order of cells in minibatch is chose randomly, so a seed for each traning restart
-      should be provided
-    :param prior_eps: numerical stability constant added to initial values
-    :param nb_param_conversion_eps: NB distribution numerical stability constant, see :func:`~cell2location.models.TorchModel.nb_log_prob`
-    :param use_cuda: boolean, telling pytorch to use the GPU (if true).
-    :param use_average_as_initial_value: boolean, use average gene expression for each categorical covariate as initial value?
-    :param stratify_cv: when using cross-validation on cells (selected in the training method), this is a pd.Series that
-      tells :func:`~sklearn.model_selection.train_test_split` how to stratify when creating a split.
+    Parameters
+    ----------
+    sample_id :
+        str with column name in cell2covar that denotes sample
+    cell2covar :
+        pd.DataFrame with covariates in columns and cells in rows, rows should be named.
+    X_data :
+        Numpy array of gene expression (cols) in cells (rows)
+    n_iter :
+        number of iterations, when using minibatch, the number of epochs (passes through all data),
+        supersedes self.n_iter
+
+    Returns
+    -------
+
     """
 
     def __init__(
@@ -116,6 +114,7 @@ class RegressionTorchModel(TorchModel):
 
     # =====================Other functions======================= #
     def plot_gene_budget(self):
+        r""" """
 
         plt.hist(np.log10(self.samples['post_sample_means']['gene_level'][:, 0]), bins=50)
         plt.xlabel('Gene expression level (hierarchical)')
@@ -123,13 +122,22 @@ class RegressionTorchModel(TorchModel):
         plt.tight_layout()
 
     def sample2df(self, gene_node_name='gene_factors'):
-        r""" Export cell factors as Pandas data frames.
+        """Export cell factors as Pandas data frames.
 
-        :param node_name: name of the cell factor model parameter to be exported
-        :param gene_node_name: name of the gene factor model parameter to be exported
-        :return: 8 Pandas dataframes added to model object:
-                 .covariate_effects, .covariate_effects_sd, .covariate_effects_q05, .covariate_effects_q95
-                 .sample_effects, .sample_effects_sd, .sample_effects_q05, .sample_effects_q95
+        Parameters
+        ----------
+        node_name :
+            name of the cell factor model parameter to be exported
+        gene_node_name :
+            name of the gene factor model parameter to be exported (Default value = 'gene_factors')
+
+        Returns
+        -------
+        type
+            8 Pandas dataframes added to model object:
+            .covariate_effects, .covariate_effects_sd, .covariate_effects_q05, .covariate_effects_q95
+            .sample_effects, .sample_effects_sd, .sample_effects_q05, .sample_effects_q95
+
         """
 
         # export parameters for covariate effects
@@ -147,10 +155,18 @@ class RegressionTorchModel(TorchModel):
                                       columns=['mean_' + 'sample_effect' + i for i in self.fact_names[sample_ind]])
 
     def annotate_cell_adata(self, adata):
-        r""" Add covariate and sample coefficients to anndata.var
+        """Add covariate and sample coefficients to anndata.var
 
-        :param adata: anndata object to annotate
-        :return: updated anndata object
+        Parameters
+        ----------
+        adata :
+            anndata object to annotate
+
+        Returns
+        -------
+        type
+            updated anndata object
+
         """
 
         if self.cell_factors_df is None:

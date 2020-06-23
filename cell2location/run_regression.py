@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Run full pipeline using cell2location model."""
+r"""Run full pipeline using cell2location model."""
 
 import gc
 import os
@@ -19,7 +19,20 @@ from cell2location.cluster_averages import select_features
 
 
 def save_plot(path, filename, extension='png'):
-    r""" Save current plot to `path` as `filename` with `extension`
+    r"""Save current plot to `path` as `filename` with `extension`
+
+    Parameters
+    ----------
+    path :
+        
+    filename :
+        
+    extension :
+         (Default value = 'png')
+
+    Returns
+    -------
+
     """
 
     plt.savefig(path + filename + '.' + extension)
@@ -38,44 +51,82 @@ def run_regression(sc_data, model_name='RegressionNBV4Torch',
                    posterior_args={'n_samples': 1000},
                    export_args={'path': "./results", 'save_model': True,
                                 'run_name_suffix': '', 'scanpy_coords_name': 'coords'}):
-    r""" Run cell2location model: train, sample prior and posterior, save, export results and save diagnostic plots
+    r"""Run cell2location model: train, sample prior and posterior, save, export results and save diagnostic plots
     Spatial expression of cell types (proxy for density) is exported as columns of adata.obs,
-       named `'mean_nUMI_factors' + 'cluster name'` for posterior mean or 
+       named `'mean_nUMI_factors' + 'cluster name'` for posterior mean or
              `'q05_nUMI_factors' + 'cluster name'` for 5% quantile of the posterior
     and as np.ndarray in `adata.uns['mod']['post_sample_means']['nUMI_factors']` (also post_sample_q05, post_sample_q95, post_sample_sd)
     Anndata object with exported results, W weights representing cell state densities, and the trained model object are saved to `export_args['path']`
-    :param sc_data: anndata object with single cell / nucleus data
-    :param model: model name as a string
-    :param train_args: arguments for training methods. See help(c2l.LocationModel) for more details
-                'covariate_col_names' - a list of columns in sp_data.obs that contains covariates of interest
-                'sample_name_col' - column in sp_data.obs that contains sample / slide ID (e.g. Visium section) 
-                                    - for plotting W cell locations
-                'mode' - "normal" or "tracking" parameters?
-                'use_raw' - extract data from RAW slot of anndata? Applies only to spatial, not single cell reference.
-                'sample_prior' - use sampling from the prior to evaluate how reasonable priors are for your data. 
-                                 This is not essential for Visium data but can be very useful for troubleshooting. 
-                                 It is essential for choose priors appropriate for any other spatial technology.
-                                 Caution: takes a lot of RAM (10th-100s of GB).
-                'n_prior_samples' - Number of prior sample. The more the better but also takes a lot of RAM.
-                'n_restarts' - number of training restarts to evaluate stability
-                'n_type' - type of restart training: 'restart' 'cv' 'bootstrap'(see help(c2l.LocationModel.fit_advi_iterative) for details)
-                'method' - which method to use to find posterior. Use default 'advi' unless you know what you are doing.
-                'readable_var_name_col' - column in sp_data.var that contains readable gene ID (e.g. HGNC symbol)
-                
-                'fact_names' - optional list of factor names, by default taken from sc_data.
-    :param posterior_args: arguments for sampling posterior, 
-                We get 1000 samples from the posterior distribution of each parameter 
-                to compute means, SD, 5% and 95% quantiles - stored in `mod.samples` and exported in `adata.uns['mod']`.
-                'n_samples' - number of samples to get from posterior approximation to compute average and SD of that distribution
-    :param export_args: arguments for exporting results
-                'path' - path where to save results
-                'plot_extension' - file extention of saved plots
-                'save_model' - boolean, save trained model? Could be useful but also takes up GBs of disk.
-                'export_q05' - boolean, save plots of 5% quantile of parameters.
-    :param return_all: return the model and annotated `sp_data` or just save both?
-    :return: results as a dictionary {'mod','sp_data','sc_obs','model_name',
-                                      'summ_sc_data_args', 'train_args','posterior_args', 'export_args',
-                                      'run_name', 'run_time'}
+
+    Parameters
+    ----------
+    sc_data :
+        anndata object with single cell / nucleus data
+    model :
+        model name as a string
+    train_args :
+        arguments for training methods. See help(c2l.LocationModel) for more details
+        'covariate_col_names' - a list of columns in sp_data.obs that contains covariates of interest
+        'sample_name_col' - column in sp_data.obs that contains sample / slide ID (e.g. Visium section)
+        - for plotting W cell locations
+        'mode' - "normal" or "tracking" parameters?
+        'use_raw' - extract data from RAW slot of anndata? Applies only to spatial, not single cell reference.
+        'sample_prior' - use sampling from the prior to evaluate how reasonable priors are for your data.
+        This is not essential for Visium data but can be very useful for troubleshooting.
+        It is essential for choose priors appropriate for any other spatial technology.
+        Caution: takes a lot of RAM (10th-100s of GB).
+        'n_prior_samples' - Number of prior sample. The more the better but also takes a lot of RAM.
+        'n_restarts' - number of training restarts to evaluate stability
+        'n_type' - type of restart training: 'restart' 'cv' 'bootstrap'(see help(c2l.LocationModel.fit_advi_iterative) for details)
+        'method' - which method to use to find posterior. Use default 'advi' unless you know what you are doing.
+        'readable_var_name_col' - column in sp_data.var that contains readable gene ID (e.g. HGNC symbol)
+        
+        'fact_names' - optional list of factor names, by default taken from sc_data.
+    posterior_args :
+        arguments for sampling posterior,
+        We get 1000 samples from the posterior distribution of each parameter
+        to compute means, SD, 5% and 95% quantiles - stored in `mod.samples` and exported in `adata.uns['mod']`.
+        'n_samples' - number of samples to get from posterior approximation to compute average and SD of that distribution (Default value = {'n_samples': 1000})
+    export_args :
+        arguments for exporting results
+        'path' - path where to save results
+        'plot_extension' - file extention of saved plots
+        'save_model' - boolean, save trained model? Could be useful but also takes up GBs of disk.
+        'export_q05' - boolean, save plots of 5% quantile of parameters. (Default value = {'path': "./results")
+    return_all :
+        return the model and annotated `sp_data` or just save both? (Default value = True)
+    model_name :
+         (Default value = 'RegressionNBV4Torch')
+    verbose :
+         (Default value = True)
+    'sample_name_col': "sample" :
+        
+    'tech_name_col': None :
+        
+    'n_iter': 15000 :
+        
+    'learning_rate': 0.005 :
+        
+    'sample_prior': False :
+        
+    'readable_var_name_col': "SYMBOL"} :
+        
+    model_kwargs :
+         (Default value = {})
+    'save_model': True :
+        
+    'run_name_suffix': '' :
+        
+    'scanpy_coords_name': 'coords'} :
+        
+
+    Returns
+    -------
+    type
+        results as a dictionary {'mod','sp_data','sc_obs','model_name',
+        'summ_sc_data_args', 'train_args','posterior_args', 'export_args',
+        'run_name', 'run_time'}
+
     """
 
     # set default parameters

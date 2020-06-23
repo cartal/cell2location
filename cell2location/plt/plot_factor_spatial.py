@@ -13,23 +13,53 @@ def plot_factor_spatial(adata, fact, cluster_names,
                         col_breaks=[0.1, 100, 1000, 3000],
                         figure_size=(24, 5.7),
                         point_size=0.8, text_size=9):
-    r"""Plot expression of factors / cell types in space. 
+    r"""Plot expression of factors / cell types in space.
         Convenient but not as powerful as scanpy plotting.
-    :param adata: anndata object with spatial data
-    :param fact: pd.DataFrame with spatial expression of factors (W), e.g. mod.spot_factors_df
-    :param cluster_names: names of those factors to show on a plot
-    :param fact_ind: index of factors to plot
-    :param trans: transform colorscale? passed to plotnine.scale_color_cmap
-    :param sample_name: if anndata object contains multiple samples specify which sample to plot (no warning given if not)
-    :param samples_col: if anndata object contains multiple which .obs columns specifies sample?
-    :param obs_x: which .obs columns specifies x coordinate?
-    :param obs_y: which .obs columns specifies y coordinate?
-    :param n_columns: how many factors / clusters to plot in each row (plotnine.facet_grid)
-    :param max_col: colorscale maximum expression in fact
-    :param col_breaks: colorscale breaks
-    :param figure_size: figures size works weirdly (only x axis has an effect, use 24 for 6-column plot, 12 for 3, 8 for 2 ...).
-    :param point_size: point size of spots
-    :param text_size: text size
+
+    Parameters
+    ----------
+    adata :
+        anndata object with spatial data
+    fact :
+        pd.DataFrame with spatial expression of factors (W), e.g. mod.spot_factors_df
+    cluster_names :
+        names of those factors to show on a plot
+    fact_ind :
+        index of factors to plot (Default value = [0])
+    trans :
+        transform colorscale? passed to plotnine.scale_color_cmap (Default value = "log")
+    sample_name :
+        if anndata object contains multiple samples specify which sample to plot (no warning given if not) (Default value = None)
+    samples_col :
+        if anndata object contains multiple which .obs columns specifies sample? (Default value = 'sample')
+    obs_x :
+        which .obs columns specifies x coordinate? (Default value = 'imagecol')
+    obs_y :
+        which .obs columns specifies y coordinate? (Default value = 'imagerow')
+    n_columns :
+        how many factors / clusters to plot in each row (plotnine.facet_grid) (Default value = 6)
+    max_col :
+        colorscale maximum expression in fact (Default value = 5000)
+    col_breaks :
+        colorscale breaks (Default value = [0.1)
+    figure_size :
+        figures size works weirdly (only x axis has an effect, use 24 for 6-column plot, 12 for 3, 8 for 2 ...). (Default value = (24)
+    point_size :
+        point size of spots (Default value = 0.8)
+    text_size :
+        text size (Default value = 9)
+    100 :
+        
+    1000 :
+        
+    3000] :
+        
+    5.7) :
+        
+
+    Returns
+    -------
+
     """
 
     if sample_name is not None:
@@ -96,6 +126,33 @@ def plot_factor_spatial(adata, fact, cluster_names,
 def plot_categ_spatial(mod, adata, sample_col, color, n_columns=2,
                        figure_size=(24, 5.7),
                        point_size=0.8, text_size=9):
+    r"""
+
+    Parameters
+    ----------
+    mod :
+        
+    adata :
+        
+    sample_col :
+        
+    color :
+        
+    n_columns :
+         (Default value = 2)
+    figure_size :
+         (Default value = (24)
+    5.7) :
+        
+    point_size :
+         (Default value = 0.8)
+    text_size :
+         (Default value = 9)
+
+    Returns
+    -------
+
+    """
 
     for_plot = adata.obs[['imagecol', 'imagerow', sample_col]]
     for_plot['color'] = color

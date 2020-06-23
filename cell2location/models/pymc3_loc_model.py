@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Base spot location class"""
+r"""Base spot location class"""
 
 import numpy as np
 import pandas as pd
@@ -14,11 +14,22 @@ from cell2location.plt.plot_factor_spatial import plot_factor_spatial
 class Pymc3LocModel(Pymc3Model):
     r"""Base class for pymc3 supervised location models.
 
-    :param cell_state_mat: Pandas data frame with gene signatures - genes in row, cell states or factors in columns
-    :param X_data: Numpy array of gene expression (cols) in spatial locations (rows)
-    :param learning_rate: ADAM learning rate for optimising Variational inference objective
-    :param n_iter: number of training iterations
-    :param total_grad_norm_constraint: gradient constraints in optimisation
+    Parameters
+    ----------
+    cell_state_mat :
+        Pandas data frame with gene signatures - genes in row, cell states or factors in columns
+    X_data :
+        Numpy array of gene expression (cols) in spatial locations (rows)
+    learning_rate :
+        ADAM learning rate for optimising Variational inference objective
+    n_iter :
+        number of training iterations
+    total_grad_norm_constraint :
+        gradient constraints in optimisation
+
+    Returns
+    -------
+
     """
 
     def __init__(
@@ -49,17 +60,36 @@ class Pymc3LocModel(Pymc3Model):
         self.cell_state = theano.shared(cell_state_mat.astype(self.data_type))
 
     def evaluate_stability(self, n_samples=1000, align=True):
-        r""" Evaluate stability in factor contributions to spots.
+        r"""Evaluate stability in factor contributions to spots.
+
+        Parameters
+        ----------
+        n_samples :
+             (Default value = 1000)
+        align :
+             (Default value = True)
+
+        Returns
+        -------
+
         """
 
         self.b_evaluate_stability(node=self.spot_factors, n_samples=n_samples, align=align)
 
     def sample2df(self, node_name='nUMI_factors'):
-        r""" Export spot factors as Pandas data frames.
+        r"""Export spot factors as Pandas data frames.
 
-        :param node_name: name of the model parameter to be exported
-        :return: 4 Pandas dataframes added to model object:
+        Parameters
+        ----------
+        node_name :
+            name of the model parameter to be exported (Default value = 'nUMI_factors')
+
+        Returns
+        -------
+        type
+            4 Pandas dataframes added to model object:
             .spot_factors_df, .spot_factors_sd, .spot_factors_q05, .spot_factors_q95
+
         """
 
         if len(self.samples) == 0:
@@ -87,10 +117,18 @@ class Pymc3LocModel(Pymc3Model):
                                       columns=['q95_' + node_name + i for i in self.fact_names])
 
     def annotate_spot_adata(self, adata):
-        r""" Add spot factors to anndata.obs
+        r"""Add spot factors to anndata.obs
 
-        :param adata: anndata object to annotate
-        :return: updated anndata object
+        Parameters
+        ----------
+        adata :
+            anndata object to annotate
+
+        Returns
+        -------
+        type
+            updated anndata object
+
         """
 
         if self.spot_factors_df is None:
@@ -111,13 +149,32 @@ class Pymc3LocModel(Pymc3Model):
     def plot_tracking_history(self, adata, plot_dir, sample='s144600',
                               n_columns=10, column_ind=None,
                               figure_size=(40, 10), point_size=0.8, text_size=9):
-        r""" Plot tracking history of spot-specific parameters in 2D
+        """Plot tracking history of spot-specific parameters in 2D
 
-        :param adata: anndata object that contains locations of spots
-        :param plot_dir: directory where to save plots
-        :param sample: string, selected sample ID
-        :param n_columns: number of columns in a plot
-        :param column_ind: which columns in `mod.tracking['init_1']['samples_df'][i]` to plot? Defalt 'None' corresponds to all.
+        Parameters
+        ----------
+        adata :
+            anndata object that contains locations of spots
+        plot_dir :
+            directory where to save plots
+        sample :
+            string, selected sample ID (Default value = 's144600')
+        n_columns :
+            number of columns in a plot (Default value = 10)
+        column_ind :
+            which columns in `mod.tracking['init_1']['samples_df'][i]` to plot? Defalt 'None' corresponds to all. (Default value = None)
+        figure_size :
+             (Default value = (40)
+        10) :
+            
+        point_size :
+             (Default value = 0.8)
+        text_size :
+             (Default value = 9)
+
+        Returns
+        -------
+
         """
 
         # from pycell2location.plt import plot_factor_spatial
@@ -161,8 +218,15 @@ class Pymc3LocModel(Pymc3Model):
                 p.save(filename=plot_init_dir + step_name + '.png', limitsize=False)
 
     def compute_expected(self):
-        r"""Compute expected expression of each gene in each spot (Poisson mu). Useful for evaluating how well
+        """Compute expected expression of each gene in each spot (Poisson mu). Useful for evaluating how well
             the model learned expression pattern of all genes in the data.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+
         """
 
         # compute the poisson rate
@@ -173,7 +237,16 @@ class Pymc3LocModel(Pymc3Model):
                   + self.samples['post_sample_means']['spot_add']
 
     def compute_expected_clust(self, fact_ind):
-        r""" Compute expected expression of each gene in each spot that comes from one reference cluster (Poisson mu).
+        """Compute expected expression of each gene in each spot that comes from one reference cluster (Poisson mu).
+
+        Parameters
+        ----------
+        fact_ind :
+            
+
+        Returns
+        -------
+
         """
 
         # compute the poisson rate

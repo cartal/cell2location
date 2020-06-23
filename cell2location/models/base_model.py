@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Base model class"""
+r"""Base model class"""
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -14,18 +14,36 @@ from cell2location.plt.plot_heatmap import clustermap
 class BaseModel():
     r"""Base class for pymc3 and pyro models.
 
-    :param X_data: Numpy array of gene expression (cols) in spatial locations (rows)
-    :param n_fact: Number of factors
-    :param n_iter: Number of training iterations
-    :param learning_rate: ADAM learning rate for optimising Variational inference objective
-    :param data_type: theano data type used to store parameters ('float32' for single, 'float64' for double precision)
-    :param total_grad_norm_constraint: gradient constraints in optimisation
-    :param verbose: print diagnostic messages?
-    :param var_names: Variable names (e.g. gene identifiers)
-    :param var_names_read: Readable variable names (e.g. gene symbol)
-    :param obs_names: Observation names (e.g. cell or spot id)
-    :param fact_names: Factor names
-    :param sample_id: Sample identifiers (e.g. different experiments)
+    Parameters
+    ----------
+    X_data :
+        Numpy array of gene expression (cols) in spatial locations (rows)
+    n_fact :
+        Number of factors
+    n_iter :
+        Number of training iterations
+    learning_rate :
+        ADAM learning rate for optimising Variational inference objective
+    data_type :
+        theano data type used to store parameters ('float32' for single, 'float64' for double precision)
+    total_grad_norm_constraint :
+        gradient constraints in optimisation
+    verbose :
+        print diagnostic messages?
+    var_names :
+        Variable names (e.g. gene identifiers)
+    var_names_read :
+        Readable variable names (e.g. gene symbol)
+    obs_names :
+        Observation names (e.g. cell or spot id)
+    fact_names :
+        Factor names
+    sample_id :
+        Sample identifiers (e.g. different experiments)
+
+    Returns
+    -------
+
     """
 
     def __init__(
@@ -90,9 +108,21 @@ class BaseModel():
 
     def plot_prior_vs_data(self, data_target_name='data_target', data_node='X_data',
                            log_transform=True):
-        r""" Plot data vs a single sample from the prior in a 2D histogram
+        r"""Plot data vs a single sample from the prior in a 2D histogram
         Uses self.X_data and self.prior_trace['data_target'].
-        :param data_node: name of the object slot containing data
+
+        Parameters
+        ----------
+        data_node :
+            name of the object slot containing data (Default value = 'X_data')
+        data_target_name :
+             (Default value = 'data_target')
+        log_transform :
+             (Default value = True)
+
+        Returns
+        -------
+
         """
 
         if type(data_node) is str:
@@ -120,14 +150,27 @@ class BaseModel():
     @staticmethod
     def align_plot_stability(fac1, fac2, name1, name2,
                              align=True, return_aligned=False):
-        r"""Align columns between two np.ndarrays using scipy.optimize.linear_sum_assignment,
+        """Align columns between two np.ndarrays using scipy.optimize.linear_sum_assignment,
             then plot correlations between columns in fac1 and fac2, ordering fac2 according to alignment
 
-        :param fac1: np.ndarray 1, factors in columns
-        :param fac2: np.ndarray 2, factors in columns
-        :param name1: axis x name
-        :param name2: axis y name
-        :param align: boolean, match columns in fac1 and fac2 using linear_sum_assignment?
+        Parameters
+        ----------
+        fac1 :
+            np.ndarray 1, factors in columns
+        fac2 :
+            np.ndarray 2, factors in columns
+        name1 :
+            axis x name
+        name2 :
+            axis y name
+        align :
+            boolean, match columns in fac1 and fac2 using linear_sum_assignment? (Default value = True)
+        return_aligned :
+             (Default value = False)
+
+        Returns
+        -------
+
         """
 
         corr12 = np.corrcoef(fac1, fac2, False)
@@ -154,9 +197,21 @@ class BaseModel():
             return linear_sum_assignment(2 - corr12)[1]
 
     def generate_cv_data(self, n=2, discrete=True, non_discrete_mean_var=1):
-        r""" Generate X_data for molecular cross-validation by sampling molecule counts 
+        """Generate X_data for molecular cross-validation by sampling molecule counts
              with np.random.binomial
-        :param n: number of cross-validation folds of equal size to generate, for now, only n=2 is implemented
+
+        Parameters
+        ----------
+        n :
+            number of cross-validation folds of equal size to generate, for now, only n=2 is implemented (Default value = 2)
+        discrete :
+             (Default value = True)
+        non_discrete_mean_var :
+             (Default value = 1)
+
+        Returns
+        -------
+
         """
 
         if n is not 2:
@@ -174,11 +229,23 @@ class BaseModel():
         self.X_data_sample[1] = np.abs(self.X_data - self.X_data_sample[0])
 
     def bootstrap_data(self, n=10, downsampling_p=0.8, discrete=True, non_discrete_mean_var=1):
-        r""" Generate X_data for bootstrap analysis by sampling molecule counts 
+        """Generate X_data for bootstrap analysis by sampling molecule counts
              with np.random.binomial
-        :param n: number of bootstrap samples to generate
-        :param downsampling_p: sample this proportion of values
-        :param non_discrete_mean_var: low means lower variance
+
+        Parameters
+        ----------
+        n :
+            number of bootstrap samples to generate (Default value = 10)
+        downsampling_p :
+            sample this proportion of values (Default value = 0.8)
+        non_discrete_mean_var :
+            low means lower variance (Default value = 1)
+        discrete :
+             (Default value = True)
+
+        Returns
+        -------
+
         """
 
         self.X_data_sample = {}
@@ -194,10 +261,18 @@ class BaseModel():
                                                         size=scale.shape).astype(np.float)
 
     def plot_posterior_mu_vs_data(self, mu_node_name='mu', data_node='X_data'):
-        r""" Plot expected value of the model (e.g. mean of poisson distribution)
+        """Plot expected value of the model (e.g. mean of poisson distribution)
 
-        :param mu_node_name: name of the object slot containing expected value
-        :param data_node: name of the object slot containing data
+        Parameters
+        ----------
+        mu_node_name :
+            name of the object slot containing expected value (Default value = 'mu')
+        data_node :
+            name of the object slot containing data (Default value = 'X_data')
+
+        Returns
+        -------
+
         """
 
         if type(mu_node_name) is str:
@@ -217,10 +292,20 @@ class BaseModel():
         plt.tight_layout()
 
     def plot_history(self, iter_start=0, iter_end=-1, log_y=True):
-        r""" Plot training history
+        """Plot training history
 
-        :param iter_start: omit initial iterations from the plot
-        :param iter_end: omit last iterations from the plot
+        Parameters
+        ----------
+        iter_start :
+            omit initial iterations from the plot (Default value = 0)
+        iter_end :
+            omit last iterations from the plot (Default value = -1)
+        log_y :
+             (Default value = True)
+
+        Returns
+        -------
+
         """
         for i in self.hist.keys():
             y = self.hist[i][iter_start:iter_end]
@@ -231,7 +316,22 @@ class BaseModel():
 
     def plot_validation_history(self, start_step=0, end_step=-1,
                                 mean_field_slot='init_1', log_y=True):
-        r""" Plot model loss (NB likelihood + penalty) using the model on training and validation data
+        """Plot model loss (NB likelihood + penalty) using the model on training and validation data
+
+        Parameters
+        ----------
+        start_step :
+             (Default value = 0)
+        end_step :
+             (Default value = -1)
+        mean_field_slot :
+             (Default value = 'init_1')
+        log_y :
+             (Default value = True)
+
+        Returns
+        -------
+
         """
 
         if end_step == -1:
@@ -254,6 +354,19 @@ class BaseModel():
 
     def plot_posterior_vs_data(self, gene_fact_name='gene_factors',
                                cell_fact_name='cell_factors'):
+        """
+
+        Parameters
+        ----------
+        gene_fact_name :
+             (Default value = 'gene_factors')
+        cell_fact_name :
+             (Default value = 'cell_factors')
+
+        Returns
+        -------
+
+        """
 
         # extract posterior samples of scaled gene and cell factors (before the final likelihood step)
         gene_fact_s = self.samples['post_sample_means'][gene_fact_name]
@@ -271,15 +384,31 @@ class BaseModel():
         plt.tight_layout()
 
     def set_fact_filt(self, fact_filt):
-        r"""Specify which factors are not relevant/ not expressed. 
+        """Specify which factors are not relevant/ not expressed.
             It is currently used to filter results shown by .print_gene_loadings() and .plot_gene_loadings()
-        :param fact_filt: logical array specifying which factors are to be retained
+
+        Parameters
+        ----------
+        fact_filt :
+            logical array specifying which factors are to be retained
+
+        Returns
+        -------
+
         """
         self.fact_filt = fact_filt
 
     def apply_fact_filt(self, df):
-        r"""Select DataFrame columns by factor filter which was saved in the model object
-        :param df: pd.DataFrame 
+        """Select DataFrame columns by factor filter which was saved in the model object
+
+        Parameters
+        ----------
+        df :
+            pd.DataFrame
+
+        Returns
+        -------
+
         """
         if self.fact_filt is not None:
             df = df.iloc[:, self.fact_filt]
@@ -289,13 +418,24 @@ class BaseModel():
     def print_gene_loadings(self, gene_fact_name='gene_factors',
                             loadings_attr='gene_loadings',
                             top_n=10, gene_filt=None, fact_filt=None):
-        r"""Print top-10 genes for each factor in gene loadings matrix.
+        """Print top-10 genes for each factor in gene loadings matrix.
 
-        :param gene_fact_name: model parameter name to extract from samples if self.gene_loadings doesn't exist
-        :param loadings_attr: model object attribute name that stores loadings
-        :param top_n: number of genes to plot for each factor
-        :param gene_filt: boolean filter for genes (e.g. restrict printed markers to TFs)
-        :param fact_filt: boolean filter for factors
+        Parameters
+        ----------
+        gene_fact_name :
+            model parameter name to extract from samples if self.gene_loadings doesn't exist (Default value = 'gene_factors')
+        loadings_attr :
+            model object attribute name that stores loadings (Default value = 'gene_loadings')
+        top_n :
+            number of genes to plot for each factor (Default value = 10)
+        gene_filt :
+            boolean filter for genes (e.g. restrict printed markers to TFs) (Default value = None)
+        fact_filt :
+            boolean filter for factors (Default value = None)
+
+        Returns
+        -------
+
         """
 
         if getattr(self, loadings_attr) is None:
@@ -332,18 +472,37 @@ class BaseModel():
                            cluster_factors=False, cluster_genes=True,
                            cmap='viridis', title='',
                            fact_filt=None):
-        r""" Plot gene loadings as a heatmap
+        """Plot gene loadings as a heatmap
 
-        :param sel_var_names: list of variable names to select
-        :param var_names: `sel_var_names` matches some names in var_names 
+        Parameters
+        ----------
+        sel_var_names :
+            list of variable names to select
+        var_names :
+            sel_var_names` matches some names in var_names
             which identifies each gene in gene loadings
-        :param gene_fact_name: model parameter name to extract from samples if self.gene_loadings doesn't exist
-        :param figsize: histogram figure size
-        :param cluster_factors: hierarchically cluster factors?
-        :param cluster_genes: hierarchically cluster genes?
-        :param cmap: matplotlib colormap
-        :param title: plot title
-        :param fact_filt: boolean or character filter for factors
+        gene_fact_name :
+            model parameter name to extract from samples if self.gene_loadings doesn't exist (Default value = 'gene_factors')
+        figsize :
+            histogram figure size (Default value = (15)
+        cluster_factors :
+            hierarchically cluster factors? (Default value = False)
+        cluster_genes :
+            hierarchically cluster genes? (Default value = True)
+        cmap :
+            matplotlib colormap (Default value = 'viridis')
+        title :
+            plot title (Default value = '')
+        fact_filt :
+            boolean or character filter for factors (Default value = None)
+        loadings_attr :
+             (Default value = 'gene_loadings')
+        7) :
+            
+
+        Returns
+        -------
+
         """
 
         if getattr(self, loadings_attr) is None:
@@ -369,10 +528,18 @@ class BaseModel():
 
     def plot_loading_distribution(self, loadings_name='gene_factors',
                                   loadings=None):
-        r""" Plot histogram for each loading (column-wise)
+        """Plot histogram for each loading (column-wise)
 
-        :param loadings_name: character name to be extracted from `self.samples['post_sample_means']`
-        :param loadings: np.ndarray to be plotted column-wise. Supersedes `loadings_name`.
+        Parameters
+        ----------
+        loadings_name :
+            character name to be extracted from `self.samples['post_sample_means']` (Default value = 'gene_factors')
+        loadings :
+            np.ndarray to be plotted column-wise. Supersedes `loadings_name`. (Default value = None)
+
+        Returns
+        -------
+
         """
 
         if loadings is None:
@@ -389,13 +556,24 @@ class BaseModel():
     def factor_expressed_plot(self, shape_cut=4, rate_cut=15,
                               sample_type='post_sample_means',
                               shape='cell_fact_mu_hyp', rate='cell_fact_sd_hyp'):
-        r"""Show which factors are expressed on a scatterplot of their regularising priors
+        """Show which factors are expressed on a scatterplot of their regularising priors
 
-        :param shape_cut: Gamma shape cutoff below which factors are expressed
-        :param rate_cut: Gamma rate cutoff below which factors are expressed
-        :param sample_type: which posterior summary to look at, default 'post_sample_means'
-        :param shape: parameter name for the Gamma shape of each factor, default 'cell_fact_mu_hyp'
-        :param rate: parameter name for the Gamma rate of each factor, default 'cell_fact_sd_hyp'
+        Parameters
+        ----------
+        shape_cut :
+            Gamma shape cutoff below which factors are expressed (Default value = 4)
+        rate_cut :
+            Gamma rate cutoff below which factors are expressed (Default value = 15)
+        sample_type :
+            which posterior summary to look at, default 'post_sample_means'
+        shape :
+            parameter name for the Gamma shape of each factor, default 'cell_fact_mu_hyp'
+        rate :
+            parameter name for the Gamma rate of each factor, default 'cell_fact_sd_hyp'
+
+        Returns
+        -------
+
         """
 
         # Expression shape and rate across cells
@@ -414,7 +592,20 @@ class BaseModel():
 
     def plot_reconstruction_history(self, n_type='cv',
                                     start_step=0, end_step=45):
-        r""" Plot reconstruction error using the model on training and validation data
+        """Plot reconstruction error using the model on training and validation data
+
+        Parameters
+        ----------
+        n_type :
+             (Default value = 'cv')
+        start_step :
+             (Default value = 0)
+        end_step :
+             (Default value = 45)
+
+        Returns
+        -------
+
         """
 
         # Extract RMSE from cross-validation parameter tracking
@@ -435,9 +626,18 @@ class BaseModel():
         plt.legend()
 
     def export2adata(self, adata, slot_name='mod'):
-        r""" Add posterior mean and sd for all parameters to unstructured data `adata.uns['mod']`.
+        """Add posterior mean and sd for all parameters to unstructured data `adata.uns['mod']`.
 
-        :param adata: anndata object
+        Parameters
+        ----------
+        adata :
+            anndata object
+        slot_name :
+             (Default value = 'mod')
+
+        Returns
+        -------
+
         """
         # add factor filter and samples of all parameters to unstructured data
         adata.uns[slot_name] = {}

@@ -16,6 +16,21 @@ seed = args.seed
 
 
 def read_synthetic_ST(outdir, seed, id):
+    r"""
+
+    Parameters
+    ----------
+    outdir :
+        
+    seed :
+        
+    id :
+        
+
+    Returns
+    -------
+
+    """
     cnt_file = 'synthetic_ST_seed{0}_{1}_composition_counts.csv'.format(seed, id)
     comp_file = cnt_file.split("_counts")[0] + ".csv"
     cnt_df = pd.read_csv(os.path.join(outdir, cnt_file), index_col=0)

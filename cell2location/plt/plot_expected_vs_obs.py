@@ -8,14 +8,26 @@ def plot_expected_vs_obs(mu, data,
                          gene1_lab="PTPRC",
                          gene2="ENSG00000167286",
                          gene2_lab="CD3D"):
-    r""" Plot expected vs observed values of a pair of genes (2D histogram).
+    r"""Plot expected vs observed values of a pair of genes (2D histogram).
 
-        :param mu: ndarray of values expected by the model
-        :param data: anndata object containing observed data
-        :param gene1: gene 1 in anndata.varnames
-        :param gene1_lab: gene names to show on the plot
-        :param gene2: gene 2 in anndata.varnames
-        :param gene2_lab: gene names to show on the plot
+    Parameters
+    ----------
+    mu :
+        ndarray of values expected by the model
+    data :
+        anndata object containing observed data
+    gene1 :
+        gene 1 in anndata.varnames (Default value = "ENSG00000081237")
+    gene1_lab :
+        gene names to show on the plot (Default value = "PTPRC")
+    gene2 :
+        gene 2 in anndata.varnames (Default value = "ENSG00000167286")
+    gene2_lab :
+        gene names to show on the plot (Default value = "CD3D")
+
+    Returns
+    -------
+
     """
 
     # remove the cell with maximal value

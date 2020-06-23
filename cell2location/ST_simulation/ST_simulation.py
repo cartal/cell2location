@@ -9,17 +9,22 @@ import torch.distributions as dists
 ## --- Version 2: cell densities --- ##
 
 def assemble_ct_composition(design_df, tot_spots, ncells_scale=5):
-    '''
+    r"""
+
     Parameters
     ----------
-    design_df: pd.DataFrame containing number of spots (nspots) and mean n of 
-        cells per spot (mean_ncell) per cell type
-    tot_spots: int
-        total number of spots to simulate
-    Return
-    ------
-    pd.DataFrame of cell types x spots with no of cells 
-    '''
+    design_df :
+        
+    tot_spots :
+        
+    ncells_scale :
+         (Default value = 5)
+
+    Returns
+    -------
+
+    
+    """
     spots_members = pd.DataFrame(columns=range(tot_spots),
                                  index=design_df.index)
     ## Cell types to spot
@@ -38,6 +43,23 @@ def assemble_ct_composition(design_df, tot_spots, ncells_scale=5):
 
 
 def assemble_spot_2(cnt, labels, members, fraction):
+    r"""
+
+    Parameters
+    ----------
+    cnt :
+        
+    labels :
+        
+    members :
+        
+    fraction :
+        
+
+    Returns
+    -------
+
+    """
     uni_labels = members.index
     spot_expr = t.zeros(cnt.shape[1]).type(t.float32)
     for z in range(len(uni_labels)):
@@ -53,6 +75,23 @@ def assemble_spot_2(cnt, labels, members, fraction):
 
 
 def assemble_st_2(cnt, labels, spots_members, gene_level_scaled):
+    r"""
+
+    Parameters
+    ----------
+    cnt :
+        
+    labels :
+        
+    spots_members :
+        
+    gene_level_scaled :
+        
+
+    Returns
+    -------
+
+    """
     tot_spots = spots_members.shape[1]
     st_cnt = np.zeros((tot_spots, cnt.shape[1]))
     for spot in range(tot_spots):
@@ -72,23 +111,23 @@ def assemble_st_2(cnt, labels, spots_members, gene_level_scaled):
 ## --- Version 1: proportions --- ##
 
 def pick_cell_types(uni_labels, alpha, min_n_cells):
-    '''
-    Pick cell types to include in synthetic spots with proportions from 
+    r"""Pick cell types to include in synthetic spots with proportions from
     Dirichlet distribution.
-    
+
     Parameters
     ----------
-    uni_labels: np.array
-        unique labels
-    alpha: np.array 
-        dirichlet distribution concentration value 
-        (can be from cell type proportions in ST)
+    uni_labels :
         
-    Return
-    ------
-    tuple of picked cell types and proportions
+    alpha :
+        
+    min_n_cells :
+        
+
+    Returns
+    -------
+
     
-    '''
+    """
     # get number of different
     # cell types present
     n_labels = uni_labels.shape[0]
@@ -110,16 +149,15 @@ def pick_cell_types(uni_labels, alpha, min_n_cells):
 
 
 def assemble_spot(cnt, labels, n_cells, fraction, pick_types, member_props):
-    '''
-    Generate one synthetic ST spot
+    """Generate one synthetic ST spot
     
     Parameters:
     -----------
     cnt: pd.DataFrame of single-cell count data --> [n_cells x n_genes] <--
     labels: pd.DataFrame of single-cell annotations [n_cells]
     n_cells: int number of cells to include in spot
-    fraction: float or np.array 
-        fraction of transcripts from each cell being 
+    fraction: float or np.array
+        fraction of transcripts from each cell being
         observed in ST-spot (gene budgets in model)
     pick_types: torch.Tensor of cell types to include in spot (output of pick_cell_types)
     member_props: torch.Tensor of the proportions of different cell types in spots (output of pick_cell_types)
@@ -130,7 +168,27 @@ def assemble_spot(cnt, labels, n_cells, fraction, pick_types, member_props):
     proportion values and number of
     cells from each type at every
     spot
-    '''
+
+    Parameters
+    ----------
+    cnt :
+        
+    labels :
+        
+    n_cells :
+        
+    fraction :
+        
+    pick_types :
+        
+    member_props :
+        
+
+    Returns
+    -------
+
+    
+    """
     # get unique labels found in single cell data
     uni_labels, uni_counts = np.unique(labels,
                                        return_counts=True)
@@ -166,20 +224,27 @@ def assemble_spot(cnt, labels, n_cells, fraction, pick_types, member_props):
 
 
 def assemble_region(cnt, labels, n_cells_vec, alpha, fraction):
-    '''
-    Assemble ST-spots from a single synthetic region 
+    """Assemble ST-spots from a single synthetic region
     i.e. with the same proportions of cell types in each spot
 
     Parameters
     ----------
-    n_cell_vec: vector of number of cells to mix for each synthetic spot
-    alpha: np.array 
-        dirichlet distribution concentration value 
-        (can be from cell type proportions in ST)
-    fraction: float or np.array 
-        fraction of transcripts from each cell being 
-        observed in ST-spot (gene budgets in model)
-    '''
+    cnt :
+        
+    labels :
+        
+    n_cells_vec :
+        
+    alpha :
+        
+    fraction :
+        
+
+    Returns
+    -------
+
+    
+    """
 
     n_spots = len(n_cells_vec)
 
@@ -235,26 +300,30 @@ def assemble_region(cnt, labels, n_cells_vec, alpha, fraction):
 
 
 def assemble_st(cnt, labels, n_regions, n_cells_tot, alpha, fraction):
-    '''
-    Assemble synthetic ST data from count matrix and predicted 
+    """Assemble synthetic ST data from count matrix and predicted
     cell type labels for each single-cell. Regions are modelled as groups of spots with
-    the same proportion of cell types (and roughly the same number of cells per spot). 
+    the same proportion of cell types (and roughly the same number of cells per spot).
 
     Parameters
     ----------
-    n_spots: int 
-        number of spots to simulate
-    n_regions: int 
-        number of regions in which spots should be divided
-    alpha: np.array 
-        dirichlet distribution concentration value 
-        (can be from cell type proportions in ST)
-    fraction: float or np.array 
-        fraction of transcripts from each cell being 
-        observed in ST-spot (gene budgets in model)
+    cnt :
+        
+    labels :
+        
+    n_regions :
+        
+    n_cells_tot :
+        
+    alpha :
+        
+    fraction :
+        
+
+    Returns
+    -------
+
     
-    (if you don't want zonation you can just make as many regions as spots)
-    '''
+    """
     # count total number of spots
     tot_spots = len(n_cells_tot)
 

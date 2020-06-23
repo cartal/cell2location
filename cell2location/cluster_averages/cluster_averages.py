@@ -7,10 +7,20 @@ from scipy.sparse import csr_matrix
 
 # +
 def get_cluster_averages(adata_ref, cluster_col):
-    """
-    :param adata_ref: AnnData object of reference single-cell dataset
-    :param cluster_col: Name of adata_ref.obs column containing cluster labels
-    :returns: pd.DataFrame of cluster average expression of each gene
+    r"""
+
+    Parameters
+    ----------
+    adata_ref :
+        AnnData object of reference single-cell dataset
+    cluster_col :
+        Name of adata_ref.obs column containing cluster labels
+
+    Returns
+    -------
+    type
+        pd.DataFrame of cluster average expression of each gene
+
     """
     if not adata_ref.raw:
         raise ValueError("AnnData object has no raw data")
@@ -33,10 +43,20 @@ def get_cluster_averages(adata_ref, cluster_col):
 
 
 def get_cluster_variances(adata_ref, cluster_col):
-    """
-    :param adata_ref: AnnData object of reference single-cell dataset
-    :param cluster_col: Name of adata_ref.obs column containing cluster labels
-    :returns: pd.DataFrame of within cluster variance of each gene
+    r"""
+
+    Parameters
+    ----------
+    adata_ref :
+        AnnData object of reference single-cell dataset
+    cluster_col :
+        Name of adata_ref.obs column containing cluster labels
+
+    Returns
+    -------
+    type
+        pd.DataFrame of within cluster variance of each gene
+
     """
     if not adata_ref.raw:
         raise ValueError("AnnData object has no raw data")
@@ -62,10 +82,20 @@ def get_cluster_variances(adata_ref, cluster_col):
 
 
 def get_cluster_averages_df(X, cluster_col):
-    """
-    :param X: DataFrame with spots / cells in rows and expression dimensions in columns
-    :param cluster_col: pd.Series object containing cluster labels
-    :returns: pd.DataFrame of cluster average expression of each gene
+    r"""
+
+    Parameters
+    ----------
+    X :
+        DataFrame with spots / cells in rows and expression dimensions in columns
+    cluster_col :
+        pd.Series object containing cluster labels
+
+    Returns
+    -------
+    type
+        pd.DataFrame of cluster average expression of each gene
+
     """
 
     all_clusters = np.unique(cluster_col)
@@ -83,10 +113,20 @@ def get_cluster_averages_df(X, cluster_col):
 
 
 def get_cluster_variances_df(X, cluster_col):
-    """
-    :param X: DataFrame with spots / cells in rows and expression dimensions in columns
-    :param cluster_col: pd.Series object containing cluster labels
-    :returns: pd.DataFrame of within cluster variances of each gene
+    r"""
+
+    Parameters
+    ----------
+    X :
+        DataFrame with spots / cells in rows and expression dimensions in columns
+    cluster_col :
+        pd.Series object containing cluster labels
+
+    Returns
+    -------
+    type
+        pd.DataFrame of within cluster variances of each gene
+
     """
 
     all_clusters = np.unique(cluster_col)

@@ -6,8 +6,22 @@ from umap.umap_ import fuzzy_simplicial_set
 
 
 def get_sparse_matrix_from_indices_distances_umap(knn_indices, knn_dists, n_obs, n_neighbors):
-    """
-    Copied out of scanpy.neighbors
+    r"""Copied out of scanpy.neighbors
+
+    Parameters
+    ----------
+    knn_indices :
+        
+    knn_dists :
+        
+    n_obs :
+        
+    n_neighbors :
+        
+
+    Returns
+    -------
+
     """
     rows = np.zeros((n_obs * n_neighbors), dtype=np.int64)
     cols = np.zeros((n_obs * n_neighbors), dtype=np.int64)
@@ -34,8 +48,7 @@ def get_sparse_matrix_from_indices_distances_umap(knn_indices, knn_dists, n_obs,
 def compute_connectivities_umap(knn_indices, knn_dists,
                                 n_obs, n_neighbors, set_op_mix_ratio=1.0,
                                 local_connectivity=1.0):
-    r"""
-    Copied out of scanpy.neighbors
+    r"""Copied out of scanpy.neighbors
     
     This is from umap.fuzzy_simplicial_set [McInnes18]_.
     Given a set of data X, a neighborhood size, and a measure of distance
@@ -44,6 +57,25 @@ def compute_connectivities_umap(knn_indices, knn_dists,
     locally approximating geodesic distance at each point, creating a fuzzy
     simplicial set for each such point, and then combining all the local
     fuzzy simplicial sets into a global one via a fuzzy union.
+
+    Parameters
+    ----------
+    knn_indices :
+        
+    knn_dists :
+        
+    n_obs :
+        
+    n_neighbors :
+        
+    set_op_mix_ratio :
+         (Default value = 1.0)
+    local_connectivity :
+         (Default value = 1.0)
+
+    Returns
+    -------
+
     """
     X = coo_matrix(([], ([], [])), shape=(n_obs, 1))
 
@@ -65,15 +97,28 @@ def compute_connectivities_umap(knn_indices, knn_dists,
 
 def spatial_knn(coords, expression, n_neighbors=14, n_sp_neighbors=7, radius=None,
                 which_exprs_dims=None, sample_id=None):
-    """
-    A variant on the standard knn neighbor graph inference procedure that also includes the spatial neighbors of each spot. By Krzysztof Polanski.
+    r"""A variant on the standard knn neighbor graph inference procedure that also includes the spatial neighbors of each spot. By Krzysztof Polanski.
 
-    :param coords: numpy.ndarray with x,y positions of spots.
-    :param expression: numpy.ndarray with expression of programmes / cluster expression (cols) of spots (rows).
-    :param n_neighbors: how many non-spatially-adjacent neighbors to report for each spot
-    :param n_sp_neighbors: how many spatially-adjacent neighbors to report for each spot. Use 7 for hexagonal grid.
-    :param radius: Supercedes `n_sp_neighbors` - radius within which to report spatially-adjacent neighbors for each spot. Pick radius based on spot size.
-    :param which_exprs_dims: which expression dimensions to use (cols)?
+    Parameters
+    ----------
+    coords :
+        numpy.ndarray with x,y positions of spots.
+    expression :
+        numpy.ndarray with expression of programmes / cluster expression (cols) of spots (rows).
+    n_neighbors :
+        how many non-spatially-adjacent neighbors to report for each spot (Default value = 14)
+    n_sp_neighbors :
+        how many spatially-adjacent neighbors to report for each spot. Use 7 for hexagonal grid. (Default value = 7)
+    radius :
+        Supercedes `n_sp_neighbors` - radius within which to report spatially-adjacent neighbors for each spot. Pick radius based on spot size. (Default value = None)
+    which_exprs_dims :
+        which expression dimensions to use (cols)? (Default value = None)
+    sample_id :
+         (Default value = None)
+
+    Returns
+    -------
+
     """
 
     # if selected dimensions not provided choose all
@@ -163,18 +208,37 @@ def spot_factors2knn(adata, coord_col=['x', 'y'], sample_col='sample.x',
                      node_name='nUMI_factors', sample_type='mean',
                      n_neighbors=14, n_sp_neighbors=7,
                      which_exprs_dims=None, which_sample=None):
-    r""" Construct spatially aware KNN graph using W spot weights
-    :param adata: anndata object with spot weights.
-    :param coord_col: anndata.obs columns containing spatial coordinates.
-    :param sample_col: anndata.obs columns containing individual Visium sample identifier.
-    :param node_name: model paramter representing spot contributions of cell types W.
-    :param sample_type: use 'means' or 5% quantile ('q05') of the posterior of W?
-    :param n_neighbors: number of expression neighbours, between spots within and across samples.
-    :param n_sp_neighbors: number of spatial neighbours, only within spots of the same sample. Defaults to 7 to get
+    """Construct spatially aware KNN graph using W spot weights
+
+    Parameters
+    ----------
+    adata :
+        anndata object with spot weights.
+    coord_col :
+        anndata.obs columns containing spatial coordinates. (Default value = ['x')
+    sample_col :
+        anndata.obs columns containing individual Visium sample identifier. (Default value = 'sample.x')
+    node_name :
+        model paramter representing spot contributions of cell types W. (Default value = 'nUMI_factors')
+    sample_type :
+        use 'means' or 5% quantile ('q05') of the posterior of W? (Default value = 'mean')
+    n_neighbors :
+        number of expression neighbours, between spots within and across samples. (Default value = 14)
+    n_sp_neighbors :
+        number of spatial neighbours, only within spots of the same sample. Defaults to 7 to get
         direct neighbours in the hexagonal grid. 13 and 19 give the next rows of spatial neighbours.
-    :param which_exprs_dims: select specific cell states from W
-    :param which_sample: select one or several samples to construct the graph
-    :return: updated anndata with neighbour graph in adata.uns['neighbors']
+    which_exprs_dims :
+        select specific cell states from W (Default value = None)
+    which_sample :
+        select one or several samples to construct the graph (Default value = None)
+    'y'] :
+        
+
+    Returns
+    -------
+    type
+        updated anndata with neighbour graph in adata.uns['neighbors']
+
     """
 
     if not sample_type in ['mean', 'sds', 'q05']:
